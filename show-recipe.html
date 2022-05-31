@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>My Recipe Book</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body class="body-recipe" onload="getRecipe()">
+    <div class="header">
+      <a href="#" id="back-link">
+        <i class="fa fa-arrow-circle-left"></i>
+      </a>
+      <img src="images/logo-text.png" />
+    </div>
+    <div id="recipe">
+      <div class="recipe-details" id="output"></div>
+    </div>
+
+    <script>
+      var id = getId();
+
+      function getRecipe() {
+        var rootPart = "https://mysite.itvarsity.org/api/recipe-book/";
+        var fullPart = rootPart + "get-recipes/?id=" + id;
+
+        fetch(fullPart)
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (data) {
+
+            document.getElementById("back-link").href="list-recipe.html?category="+ data[0].category;
+            var output = "";
+            output += `<img src="${rootPart}uploads/${data[0].image}"/>
+            <h1>${data[0].title}</h1>
+            <div class="recipe-details-ingredients">
+              <h2>Ingredients</h2>
+              <ul>${data[0].ingredients}</ul>
+            </div>
+              <div class="recipe-details-steps">
+                <h2>Steps</h2>
+                <ol>${data[0].method}</ol>
+              </div>
+            
+            
+            `;
+            document.getElementById("output").innerHTML = output;
+          });
+      }
+
+      function getId() {
+        var url = window.location.href;
+        var pos = url.search("=");
+        var id = url.slice(pos + 1);
+
+        return id;
+      }
+    </script>
+  </body>
+</html>
